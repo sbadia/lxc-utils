@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Outputs state of all containers
+# <seb@sebian.fr>
+# feel free to copy and adapt
+#
+
+lxcpath=/var/lib/lxc
+
+if [ "$(id -u)" != "0" ]; then
+    echo "This script should be run as 'root'"
+    exit 1
+fi
+
+ip() {
+  echo `cat $lxcpath/$CONTAINER/config |grep ipv4 |cut -d ' ' -f 3 |cut -d '/' -f 1`
+}
+
+netlink() {
+  echo `cat $lxcpath/$CONTAINER/config |grep link |cut -d ' ' -f 3`
+}
+
+state() {
+  lxc=`lxc-info -n $CONTAINER |cut -d ' ' -f 3`
+  if [ $lxc == 'RUNNING' ]; then
+    echo -en '\033[32mRunning\033[37m'
+  else
+    echo -en '\033[31mStopped\033[37m'
+  fi
+}
+
+hostname() {
+  echo `cat $lxcpath/$CONTAINER/rootfs/etc/hostname`
+}
+
+echo -e "Ip Addr\t\tBridge\t\tState\tHostname"
+for CONTAINER in $(ls -1 $lxcpath); do
+  if [ -d $lxcpath/$CONTAINER/rootfs ]; then
+   echo -e "$(ip)\t$(netlink)\t$(state)\t$(hostname)"
+  fi
+done
