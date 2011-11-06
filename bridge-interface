@@ -1,0 +1,30 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet manual
+
+# Prod bridge
+auto switch-prod
+iface switch-prod inet static
+	address 192.168.1.100
+	netmask 255.255.255.0
+	gateway 192.168.1.254
+	network 192.168.1.0
+	broadcast 192.168.1.255
+	bridge_ports eth0
+	bridge_stp off
+	bridge_maxwait 5
+	dns-nameservers 192.168.1.253
+	dns-search toto.fr
+
+# Virtual
+auto eth0:1
+iface eth0:1 inet static
+	address 192.168.1.252
+	netmask 255.255.255.0

@@ -1,0 +1,30 @@
+#!/bin/sh
+# seb@sebian.fr
+
+LVS=$1
+NAME=$2
+VG="beltegeusevg"
+
+usage()
+{
+  echo -n "$1 not set !\n"
+  echo -n "\nUsage:\tlvcreate.sh <disk-space> <lv-name>\n"
+}
+
+if [ -z $NAME ];then
+  usage "name"
+  exit 0
+elif [ -z $LVS ];then
+  usage "lv"
+  exit 0
+else
+  echo "oo lvcreate $NAME (${LVS}G)\n"
+  lvcreate -L ${LVS}G ${VG} -n ${NAME}-disk
+  echo "oo create file system on ${NAME}"
+  mkfs.ext3 /dev/${VG}/${NAME}-disk
+  mkdir /var/lib/lxc/${NAME}
+  echo "/dev/${VG}/${NAME}-disk /var/lib/lxc/${NAME}        ext3    defaults        0     2" >> /etc/fstab
+  echo "oo mount ${NAME}"
+  mount /var/lib/lxc/${NAME}
+  echo "ooo Done"
+fi
