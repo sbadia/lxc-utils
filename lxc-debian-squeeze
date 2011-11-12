@@ -69,10 +69,10 @@ iface lo inet loopback
 auto eth0
 iface eth0 inet static
 	address $ip
-	netmask 255.255.255.0
-	network 10.0.1.0
-	broadcast 10.0.1.255
-	pre-up /sbin/route add default gw 10.0.1.254
+	netmask 255.255.240.0
+	network 10.0.0.0
+	broadcast 10.0.15.255
+	#pre-up /sbin/route add default gw 10.0.15.254
 EOF
 
     # set the hostname
@@ -81,7 +81,7 @@ $hostname
 EOF
     # add the route in rc.local
     cat <<EOF > $rootsf/etc/rc.local
-root add default gw 10.0.1.254
+route add default gw 10.0.15.254
 EOF
 
     # reconfigure some services
@@ -115,6 +115,7 @@ bash-completion,\
 locales,\
 ifupdown,\
 locales,\
+rsyslog,\
 libui-dialog-perl,\
 dialog,\
 isc-dhcp-client,\
@@ -245,7 +246,7 @@ lxc.network.type = veth
 lxc.network.flags = up
 lxc.network.link = switch-prod
 lxc.network.hwaddr = 00:FF:12:34:56:$hw
-lxc.network.ipv4 = $ip/24
+lxc.network.ipv4 = $ip/20
 EOF
 
     if [ $? -ne 0 ]; then
