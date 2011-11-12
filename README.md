@@ -8,10 +8,10 @@ feel free to copy and adapt
 
 Install Lxc
 -------
-`apt-get install lxc debootstrap bridge-utils vlan libcap2-bin`
-`mkdir /cgroup`
-`echo "cgroup        /cgroup        cgroup        defaults    0    0" >> /etc/fstab`
-`mount cgroup`
+1. `apt-get install lxc debootstrap bridge-utils vlan libcap2-bin`
+2. `mkdir /cgroup`
+3. `echo "cgroup        /cgroup        cgroup        defaults    0    0" >> /etc/fstab`
+4. `mount cgroup`
 
 Play with Lxc
 -------
@@ -29,7 +29,11 @@ Lxc Status
 `wget https://raw.github.com/sbadia/lxc-utils/master/lxc-status && bash lxc-status`
 
 Ip Addr		Bridge		State	Hostname
+
 10.0.10.1	switch-prod	Running	apt.sebian.fr
+
 10.0.10.6	switch-prod	Running	dns.sebian.fr
+
 10.0.10.2	switch-prod	Running	git.sebian.fr
+
 10.0.10.5	switch-prod	Running	mail.sebian.fr
