@@ -6,6 +6,7 @@
 #
 
 lxcpath=/var/lib/lxc
+i=0
 
 if [ "$(id -u)" != "0" ]; then
     echo "This script should be run as 'root'"
@@ -23,19 +24,24 @@ netlink() {
 state() {
   lxc=`lxc-info -n $CONTAINER |cut -d ' ' -f 3`
   if [ $lxc == 'RUNNING' ]; then
-    echo -en '\033[32mRunning\033[37m'
+    echo -en '\033[32mRunning\033[0m'
   else
-    echo -en '\033[31mStopped\033[37m'
+    echo -en '\033[31mStopped\033[0m'
   fi
+}
+
+os() {
+  echo `cat $lxcpath/$CONTAINER/rootfs/etc/debian_version`
 }
 
 hostname() {
   echo `cat $lxcpath/$CONTAINER/rootfs/etc/hostname`
 }
 
-echo -e "Ip Addr\t\tBridge\t\tState\tHostname"
+echo -e "Id\tIp Addr\t\tBridge\t\tState\tDebian\tHostname"
 for CONTAINER in $(ls -1 $lxcpath); do
   if [ -d $lxcpath/$CONTAINER/rootfs ]; then
-   echo -e "$(ip)\t$(netlink)\t$(state)\t$(hostname)"
+   i=$(($i+1))
+   echo -e "$i\t$(ip)\t$(netlink)\t$(state)\t$(os)\t$(hostname)"
   fi
 done
